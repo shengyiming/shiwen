@@ -35,7 +35,15 @@
 
 	<bean id="ssf" class="org.mybatis.spring.SqlSessionFactoryBean">
 		<property name="dataSource" ref="dataSource"></property>
-		<property name="configLocation" value="classpath:mybatis_config.xml"></property>
+		
+		<!--mybatis配置文件  -->
+		<!-- 
+			<property name="configLocation" value="classpath:mybatis_config.xml"></property>
+		 -->
+		<!-- 替代mybatis配置文件的加载方式  -->	
+        <property name="typeAliasesPackage" value="com.better.bean"></property>
+        <property name="mapperLocations" value="classpath*:mapping/*Mapper.xml"></property>
+		
 	</bean>
 
 	<!--	单例：生成UserDao对象，继续生成userService对象，并将User注入到UserService中
