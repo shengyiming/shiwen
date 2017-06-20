@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.1.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd">
+
+	<!-- 开启spring mvc的注解 -->
+	<mvc:annotation-driven />
+	
+	<!-- 配置注解扫描的包路径：可指定扫描service，Dao...  因使用mybatis需考虑service和Dao的兼容故只扫描Controller -->
+	<context:component-scan base-package="com.better.controller" />
+	
+	<!-- 暂时不知道service层为何扫描失败，故单个扫描  -->
+	<bean id="UserServiceImpl" class="com.better.service.UserServiceImpl"></bean>
+	
+	
+	<!-- 加载资源文件 -->
+	<bean
+		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="locations">
+			<list>
+				<value>classpath:jdbc.properties</value>
+			</list>
+		</property>
+	</bean>
+	
+	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource">
+		<property name="driverClassName" value="com.mysql.jdbc.Driver"></property>
+		<property name="url" value="jdbc:mysql:///test_01"></property>
+		<property name="username" value="root"></property>
+		<property name="password" value="root"></property>
+	</bean>
+
+	<bean id="ssf" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSource"></property>
+		<property name="configLocation" value="classpath:mybatis_config.xml"></property>
+	</bean>
+
+	<!--	单例：生成UserDao对象，继续生成userService对象，并将User注入到UserService中
+	<bean id="userDao" class="org.mybatis.spring.mapper.MapperFactoryBean">
+		<property name="mapperInterface">				要生成实例的对应接口
+			<value>com.better.dao.UserDao</value>
+		</property>
+		<property name="sqlSessionFactory" ref="ssf"></property>
+	</bean>
+
+	<bean id="UserServiceImpl" class="com.better.service.UserServiceImpl">
+		<property name="userDao" ref="userDao"></property>
+	</bean>
+	 -->
+	
+	<!-- mapper扫描器：扫描dao层的mapper并生成实例 -->
+	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+		<property name="sqlSessionFactoryBeanName" value="ssf" />
+		<property name="basePackage" value="com.better.dao"></property>
+	</bean>
+
+
+
+</beans>

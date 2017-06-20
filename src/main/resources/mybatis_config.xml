@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	<!--批量扫描： 配置别名 -->
+	<typeAliases>
+		<package name="com.better.bean"/>
+	</typeAliases>
+	
+	<!-- mapper的声明 -->
+	<mappers>
+	    <mapper resource="com/better/dao/userDaoMapper.xml"/>
+	</mappers>
+</configuration>
